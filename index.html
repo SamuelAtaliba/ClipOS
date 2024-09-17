@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordem de Serviço</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div id="app" class="container">
+        <header class="my-4">
+            <img src="logo.svg" alt="Logo" class="logo">
+        </header>
+
+        <div v-if="step === 1" class="form-step">
+            <h2>Ordem de Serviço</h2>
+            <form @submit.prevent="nextStep">
+                <div class="mb-3">
+                    <label for="unit" class="form-label">Unidade</label>
+                    <select id="unit" v-model="unit" class="form-select" required>
+                        <option value="Barra da Tijuca">Barra da Tijuca</option>
+                        <option value="Botafogo">Botafogo</option>
+                        <option value="Del Castilho">Del Castilho</option>
+                        <option value="Méier">Méier</option>
+                        <option value="Penha">Penha</option>
+                        <option value="Recreio">Recreio</option>
+                        <option value="Tijuca">Tijuca</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="techName" class="form-label">Nome do Técnico</label>
+                    <input type="text" id="techName" v-model="techName" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="date" class="form-label">Data</label>
+                    <input type="date" id="date" v-model="date" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="cost" class="form-label">Custos</label>
+                    <input type="number" id="cost" v-model.number="cost" class="form-control" step="0.01">
+                </div>
+                <div class="mb-3">
+                    <label for="arrivalTime" class="form-label">Horário de Chegada</label>
+                    <input type="time" id="arrivalTime" v-model="arrivalTime" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="departureTime" class="form-label">Horário de Saída</label>
+                    <input type="time" id="departureTime" v-model="departureTime" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="supervisor" class="form-label">Supervisor(a)</label>
+                    <input type="text" id="supervisor" v-model="supervisor" class="form-control" placeholder="Nome Supervisor(a)" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Próximo</button>
+            </form>
+        </div>
+
+        <div v-if="step === 2" class="form-step">
+            <h2>O que foi feito</h2>
+            <textarea v-model="taskDetails" class="form-control" rows="5" required></textarea>
+            <button @click="nextStep" class="btn btn-primary mt-3">Próximo</button>
+        </div>
+
+        <div v-if="step === 3" class="form-step">
+            <h2>Pendências</h2>
+            <textarea v-model="pendingIssues" class="form-control" rows="5"></textarea>
+            <button @click="generateReport" class="btn btn-primary mt-3">Gerar Relatório</button>
+        </div>
+
+        <div v-if="step === 4" class="form-step">
+            <h2>Relatório</h2>
+            <pre>{{ report }}</pre>
+            <button @click="copyReport" class="btn btn-primary mt-3">Copiar para Área de Transferência</button>
+            <div v-if="loading" class="loading mt-3">Gerando Relatório...</div>
+        </div>
+
+        <!-- Alerta de cópia bem-sucedida -->
+        <div v-if="showCopyAlert" class="alert alert-success position-fixed bottom-0 end-0 m-3" role="alert">
+            Relatório copiado para a área de transferência!
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
